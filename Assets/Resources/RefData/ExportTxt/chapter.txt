@@ -1,0 +1,3 @@
+id	sortOrder	chapterName	chapterTitle	description	startNodeId	unlockChapterId
+1	1	序章	相遇	你在一家咖啡馆遇到了神秘人。	100001	0
+2	2	第一章	抉择	你的选择将决定故事的走向。	100101	1

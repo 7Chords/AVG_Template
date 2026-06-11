@@ -1,0 +1,6 @@
+id	translateKey	zh_CN	en_US
+1	ui_dialogue_skip	跳过	Skip
+2	ui_dialogue_auto	自动	Auto
+3	ui_dialogue_history	历史	History
+4	chapter_1_title	序章·相遇	Prologue·Encounter
+5	chapter_2_title	第一章·抉择	Chapter 1·Choice
