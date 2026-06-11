@@ -22,6 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 063a7d9ce9d7e6e46b169c10883a5274
+    m_Address: prefab_story_select_item
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 58383bddb2b454d4e83c64f5c9a33e8d, type: 2}
   m_SchemaSet:

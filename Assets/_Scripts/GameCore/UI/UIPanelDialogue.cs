@@ -4,11 +4,9 @@ using GameCore;
 using SCFrame;
 using SCFrame.UI;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace GameCore.UI
 {
@@ -20,7 +18,7 @@ namespace GameCore.UI
         private string _m_currentDialogueFullContent;
         private bool _m_dialogueLineRevealComplete;
         private CoroutineContainer _m_coroutineContainer = new CoroutineContainer();
-        private readonly List<GameObject> _m_choiceBtnList = new List<GameObject>();
+        private UIPanelStorySelectContainer _m_selectContainer;
 
         public UIPanelDialogue(UIMonoDialogue _mono, SCUIShowType _showType) : base(_mono, _showType)
         {
@@ -34,61 +32,40 @@ namespace GameCore.UI
         public override void AfterInitialize()
         {
             mono.TryResolveRefs();
-            ensureChoiceRoot();
+            if (mono.monoSelectContainer != null)
+                _m_selectContainer = new UIPanelStorySelectContainer(mono.monoSelectContainer, SCUIShowType.INTERNAL);
         }
 
         public override void BeforeDiscard()
         {
             stopDialogueTypewriter();
-            hideChoices();
+            _m_selectContainer?.Discard();
         }
 
         public override void OnHidePanel()
         {
+            SCMsgCenter.UnregisterMsg(SCMsgConst.STORY_SELECT_CONFIRM, onStorySelectConfirm);
             if (mono.imgClickArea != null)
                 mono.imgClickArea.RemoveMouseLeftClickDown(onMouseClickDialogue);
             stopDialogueTypewriter();
-            hideChoices();
+            _m_selectContainer?.HidePanel();
         }
 
         public override void OnShowPanel()
         {
+            SCMsgCenter.RegisterMsg(SCMsgConst.STORY_SELECT_CONFIRM, onStorySelectConfirm);
             if (mono.imgClickArea != null)
                 mono.imgClickArea.AddMouseLeftClickDown(onMouseClickDialogue);
 
+            _m_selectContainer?.ShowPanel();
             StoryModel.instance.StartChapter(_m_chapterId);
             _m_currentNode = StoryRefDataHelper.GetChapterStartNode(_m_chapterId);
             refreshShow();
         }
 
-        private void ensureChoiceRoot()
-        {
-            if (mono.choiceRoot != null)
-                return;
-
-            GameObject rootGo = new GameObject("choice_root", typeof(RectTransform), typeof(VerticalLayoutGroup));
-            RectTransform rect = rootGo.GetComponent<RectTransform>();
-            rect.SetParent(mono.transform, false);
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(0f, 120f);
-            rect.sizeDelta = new Vector2(600f, 300f);
-
-            VerticalLayoutGroup layout = rootGo.GetComponent<VerticalLayoutGroup>();
-            layout.childAlignment = TextAnchor.MiddleCenter;
-            layout.spacing = 12f;
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
-
-            mono.choiceRoot = rect;
-        }
-
         private void refreshShow()
         {
-            hideChoices();
+            endSelectIfNeeded();
             if (_m_currentNode == null)
             {
                 Debug.LogError($"章节 {_m_chapterId} 找不到起始剧情节点");
@@ -106,9 +83,7 @@ namespace GameCore.UI
                     mono.txtContent.text = string.Empty;
 
                 if (string.IsNullOrEmpty(_m_currentDialogueFullContent))
-                {
                     _m_dialogueLineRevealComplete = true;
-                }
                 else
                 {
                     _m_dialogueLineRevealComplete = false;
@@ -182,11 +157,42 @@ namespace GameCore.UI
 
             if (_m_currentNode.nextList != null && _m_currentNode.nextList.Count > 1)
             {
-                showChoices(_m_currentNode);
+                _m_isSelecting = true;
+                SCMsgCenter.SendMsg(SCMsgConst.STORY_START_SELECT, _m_currentNode);
                 return;
             }
 
             advanceToNextSingleNode();
+        }
+
+        private void onStorySelectConfirm(object[] _objs)
+        {
+            if (_objs == null || _objs.Length == 0)
+                return;
+
+            StoryNodeRefObj selectNode = _objs[0] as StoryNodeRefObj;
+            if (selectNode == null || selectNode.nextList == null || selectNode.nextList.Count == 0)
+                return;
+
+            SCMsgCenter.SendMsg(SCMsgConst.STORY_END_SELECT);
+            _m_isSelecting = false;
+
+            if (selectNode.nextList.Count > 1)
+            {
+                _m_isSelecting = true;
+                SCMsgCenter.SendMsg(SCMsgConst.STORY_START_SELECT, selectNode);
+                return;
+            }
+
+            long nextId = selectNode.nextList[0];
+            if (nextId <= 0)
+            {
+                onChapterEnd();
+                return;
+            }
+
+            _m_currentNode = StoryRefDataHelper.GetNode(_m_chapterId, nextId);
+            refreshShow();
         }
 
         private void advanceToNextSingleNode()
@@ -205,84 +211,17 @@ namespace GameCore.UI
             refreshShow();
         }
 
-        private void showChoices(StoryNodeRefObj _parentNode)
+        private void endSelectIfNeeded()
         {
-            hideChoices();
-            if (_parentNode?.nextList == null)
+            if (!_m_isSelecting)
                 return;
-
-            foreach (long nextId in _parentNode.nextList)
-            {
-                StoryNodeRefObj choiceNode = StoryRefDataHelper.GetNode(_m_chapterId, nextId);
-                if (choiceNode == null || choiceNode.nodeType != EStoryNodeType.SELECT)
-                    continue;
-                createChoiceButton(choiceNode);
-            }
-
-            _m_isSelecting = _m_choiceBtnList.Count > 0;
-        }
-
-        private void createChoiceButton(StoryNodeRefObj _choiceNode)
-        {
-            GameObject btnGo = new GameObject($"choice_{_choiceNode.id}",
-                typeof(RectTransform), typeof(Image), typeof(Button));
-            btnGo.transform.SetParent(mono.choiceRoot, false);
-
-            RectTransform btnRect = btnGo.GetComponent<RectTransform>();
-            btnRect.sizeDelta = new Vector2(520f, 56f);
-
-            Image btnImage = btnGo.GetComponent<Image>();
-            btnImage.color = new Color(0f, 0f, 0f, 0.55f);
-
-            GameObject textGo = new GameObject("txt", typeof(RectTransform), typeof(Text));
-            textGo.transform.SetParent(btnGo.transform, false);
-            RectTransform textRect = textGo.GetComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = new Vector2(16f, 8f);
-            textRect.offsetMax = new Vector2(-16f, -8f);
-
-            Text txt = textGo.GetComponent<Text>();
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            txt.fontSize = 28;
-            txt.alignment = TextAnchor.MiddleLeft;
-            txt.color = Color.white;
-            txt.text = _choiceNode.name ?? string.Empty;
-
-            StoryNodeRefObj captured = _choiceNode;
-            btnGo.GetComponent<Button>().onClick.AddListener(() => onChoiceClick(captured));
-            _m_choiceBtnList.Add(btnGo);
-        }
-
-        private void onChoiceClick(StoryNodeRefObj _choiceNode)
-        {
-            if (_choiceNode == null || _choiceNode.nextList == null || _choiceNode.nextList.Count < 1)
-                return;
-
+            SCMsgCenter.SendMsg(SCMsgConst.STORY_END_SELECT);
             _m_isSelecting = false;
-            hideChoices();
-
-            long nextId = _choiceNode.nextList[0];
-            if (nextId <= 0)
-            {
-                onChapterEnd();
-                return;
-            }
-
-            _m_currentNode = StoryRefDataHelper.GetNode(_m_chapterId, nextId);
-            refreshShow();
-        }
-
-        private void hideChoices()
-        {
-            _m_isSelecting = false;
-            for (int i = 0; i < _m_choiceBtnList.Count; i++)
-                SCCommon.DestoryGameObject(_m_choiceBtnList[i]);
-            _m_choiceBtnList.Clear();
         }
 
         private void onChapterEnd()
         {
+            endSelectIfNeeded();
             StoryModel.instance.MarkChapterCleared(_m_chapterId);
 
             ChapterRefObj nextChapter = null;
@@ -299,10 +238,7 @@ namespace GameCore.UI
 
             if (nextChapter == null)
             {
-                if (mono.txtContent != null)
-                    mono.txtContent.text = "（剧情演示结束）";
-                if (mono.txtName != null)
-                    mono.txtName.text = string.Empty;
+                _m_currentNode = null;
                 return;
             }
 

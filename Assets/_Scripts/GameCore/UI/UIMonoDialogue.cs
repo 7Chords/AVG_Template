@@ -10,10 +10,10 @@ namespace GameCore.UI
         public Text txtName;
         [Header("内容文本")]
         public Text txtContent;
+        [Header("选项容器")]
+        public UIMonoCommonContainer monoSelectContainer;
         [Header("点击继续区域")]
         public Image imgClickArea;
-        [Header("选项按钮挂载点")]
-        public Transform choiceRoot;
         [Header("对话打字机间隔（秒）")]
         public float dialogueTypewriterInterval = 0.04f;
         [Header("存档按钮")]
@@ -47,12 +47,6 @@ namespace GameCore.UI
             }
             if (imgClickArea == null)
                 imgClickArea = GetComponent<Image>();
-            if (choiceRoot == null)
-            {
-                Transform existing = transform.Find("choice_root");
-                if (existing != null)
-                    choiceRoot = existing;
-            }
         }
     }
 }
