@@ -5,7 +5,8 @@ using GameCore;
 namespace GameCore.RefData
 {
     /// <summary>
-    /// 剧情节点配表：每章独立一张表，通过 nextList 串联本章剧情链。
+    /// 剧情节点配表：每章独立一张表。
+    /// nextList 为跳转节点 id；nextChapterId 为目标章节（0 表示当前章）。
     /// </summary>
     public class StoryNodeRefObj : SCRefDataCore
     {
@@ -16,6 +17,8 @@ namespace GameCore.RefData
         public EStoryNodeType nodeType;
         public EStoryNodeFlagType flagType;
         public List<long> nextList;
+        /// <summary>跳转目标章节 id，0 表示 nextList 节点位于当前章</summary>
+        public int nextChapterId;
         public string bgAsset;
         public string characterAsset;
 
@@ -27,6 +30,7 @@ namespace GameCore.RefData
             nodeType = (EStoryNodeType)getEnum("nodeType", typeof(EStoryNodeType));
             flagType = (EStoryNodeFlagType)getEnum("flagType", typeof(EStoryNodeFlagType));
             nextList = getList<long>("nextList");
+            nextChapterId = getInt("nextChapterId");
             bgAsset = getString("bgAsset");
             characterAsset = getString("characterAsset");
         }

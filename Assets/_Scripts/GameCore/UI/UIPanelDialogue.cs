@@ -67,10 +67,7 @@ namespace GameCore.UI
         {
             endSelectIfNeeded();
             if (_m_currentNode == null)
-            {
-                Debug.LogError($"章节 {_m_chapterId} 找不到起始剧情节点");
                 return;
-            }
 
             StoryModel.instance.SetCurrentNode(_m_currentNode.id);
             stopDialogueTypewriter();
@@ -149,9 +146,9 @@ namespace GameCore.UI
                 return;
             }
 
-            if (StoryRefDataHelper.IsChapterEndNode(_m_currentNode))
+            if (StoryRefDataHelper.IsStoryStopNode(_m_currentNode, _m_chapterId))
             {
-                onChapterEnd();
+                onStoryStop();
                 return;
             }
 
@@ -162,7 +159,7 @@ namespace GameCore.UI
                 return;
             }
 
-            advanceToNextSingleNode();
+            jumpFromNode(_m_currentNode);
         }
 
         private void onStorySelectConfirm(object[] _objs)
@@ -171,43 +168,49 @@ namespace GameCore.UI
                 return;
 
             StoryNodeRefObj selectNode = _objs[0] as StoryNodeRefObj;
-            if (selectNode == null || selectNode.nextList == null || selectNode.nextList.Count == 0)
+            if (selectNode == null)
                 return;
 
             SCMsgCenter.SendMsg(SCMsgConst.STORY_END_SELECT);
             _m_isSelecting = false;
 
-            if (selectNode.nextList.Count > 1)
+            if (selectNode.nextList != null && selectNode.nextList.Count > 1)
             {
                 _m_isSelecting = true;
                 SCMsgCenter.SendMsg(SCMsgConst.STORY_START_SELECT, selectNode);
                 return;
             }
 
-            long nextId = selectNode.nextList[0];
-            if (nextId <= 0)
+            if (StoryRefDataHelper.IsStoryStopNode(selectNode, _m_chapterId))
             {
-                onChapterEnd();
+                onStoryStop();
                 return;
             }
 
-            _m_currentNode = StoryRefDataHelper.GetNode(_m_chapterId, nextId);
-            refreshShow();
+            jumpFromNode(selectNode);
         }
 
-        private void advanceToNextSingleNode()
+        /// <summary>按节点上的 nextChapterId + nextList 执行跳转。</summary>
+        private void jumpFromNode(StoryNodeRefObj _node)
         {
-            if (_m_currentNode == null || _m_currentNode.nextList == null || _m_currentNode.nextList.Count < 1)
-                return;
-
-            long nextId = _m_currentNode.nextList[0];
-            if (nextId <= 0)
+            if (!StoryRefDataHelper.TryGetJumpTarget(_node, _m_chapterId, out int targetChapterId, out long targetNodeId))
             {
-                onChapterEnd();
+                onStoryStop();
                 return;
             }
 
-            _m_currentNode = StoryRefDataHelper.GetNode(_m_chapterId, nextId);
+            if (targetChapterId != _m_chapterId)
+                StoryModel.instance.MarkChapterCleared(_m_chapterId);
+
+            _m_chapterId = targetChapterId;
+            StoryModel.instance.StartChapter(_m_chapterId);
+            _m_currentNode = StoryRefDataHelper.GetNode(_m_chapterId, targetNodeId);
+            if (_m_currentNode == null)
+            {
+                Debug.LogError($"跳转失败：chapter={_m_chapterId}, node={targetNodeId}");
+                onStoryStop();
+                return;
+            }
             refreshShow();
         }
 
@@ -219,33 +222,11 @@ namespace GameCore.UI
             _m_isSelecting = false;
         }
 
-        private void onChapterEnd()
+        private void onStoryStop()
         {
             endSelectIfNeeded();
             StoryModel.instance.MarkChapterCleared(_m_chapterId);
-
-            ChapterRefObj nextChapter = null;
-            foreach (ChapterRefObj chapter in StoryRefDataHelper.GetAllChaptersSorted())
-            {
-                if (chapter.id <= _m_chapterId)
-                    continue;
-                if (StoryRefDataHelper.IsChapterUnlocked(chapter.id, StoryModel.instance.clearedChapterIds))
-                {
-                    nextChapter = chapter;
-                    break;
-                }
-            }
-
-            if (nextChapter == null)
-            {
-                _m_currentNode = null;
-                return;
-            }
-
-            _m_chapterId = nextChapter.id;
-            StoryModel.instance.StartChapter(_m_chapterId);
-            _m_currentNode = StoryRefDataHelper.GetChapterStartNode(_m_chapterId);
-            refreshShow();
+            _m_currentNode = null;
         }
     }
 }

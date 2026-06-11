@@ -1,7 +1,7 @@
-id	name	content	nodeType	flagType	nextList	bgAsset	characterAsset
-1	旁白	第二天，艾莉给你发来消息。	STANDARD	BEGIN	2		
-2	艾莉	今晚有空吗？我想请你帮个忙。	STANDARD	NONE	3;4		
-3	接受	好的，告诉我详情。	SELECT	NONE	5		
-4	拒绝	抱歉，今晚有事。	SELECT	NONE	6		
-5	艾莉	太好了！老地方见。	STANDARD	END	0		
-6	旁白	你谢绝了邀请，故事在这里告一段落。	STANDARD	END	0		
+id	name	content	nodeType	flagType	nextList	nextChapterId	bgAsset	characterAsset
+1	旁白	第二天，艾莉给你发来消息。	STANDARD	BEGIN	2	0		
+2	艾莉	今晚有空吗？我想请你帮个忙。	STANDARD	NONE	3;4	0		
+3	接受	好的，告诉我详情。	SELECT	NONE	5	0		
+4	拒绝	抱歉，今晚有事。	SELECT	NONE	6	0		
+5	艾莉	太好了！老地方见。	STANDARD	END	0	0		
+6	旁白	你谢绝了邀请，故事在这里告一段落。	STANDARD	END	0	0		

@@ -4,6 +4,7 @@ namespace GameCore.RefData
 {
     /// <summary>
     /// 章节配表：定义章节元数据与起始节点。
+    /// sortOrder / unlockChapterId 用于章节选单；剧情流转由 story_node 的 nextChapterId 决定。
     /// </summary>
     public class ChapterRefObj : SCRefDataCore
     {
