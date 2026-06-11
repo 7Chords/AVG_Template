@@ -648,8 +648,11 @@ MonoBehaviour:
   canvasGroup: {fileID: 1354240855910944596}
   fadeInDuration: 0.25
   fadeOutDuration: 0.25
-  txtName: {fileID: 0}
-  txtContent: {fileID: 0}
+  txtName: {fileID: 6519612426430641361}
+  txtContent: {fileID: 8973260286278534122}
+  imgClickArea: {fileID: 3888066216659498705}
+  choiceRoot: {fileID: 0}
+  dialogueTypewriterInterval: 0.04
   btnSave: {fileID: 0}
   btnLoad: {fileID: 0}
   btnSetting: {fileID: 0}

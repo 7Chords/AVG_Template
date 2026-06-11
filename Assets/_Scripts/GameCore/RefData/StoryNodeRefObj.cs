@@ -5,12 +5,11 @@ using GameCore;
 namespace GameCore.RefData
 {
     /// <summary>
-    /// 剧情节点配表：按 chapterId 归属章节，通过 nextList 串联剧情链。
+    /// 剧情节点配表：每章独立一张表，通过 nextList 串联本章剧情链。
     /// </summary>
     public class StoryNodeRefObj : SCRefDataCore
     {
         public long id;
-        public int chapterId;
         /// <summary>说话人名或选项文本</summary>
         public string name;
         public string content;
@@ -23,7 +22,6 @@ namespace GameCore.RefData
         protected override void _parseFromString()
         {
             id = getLong("id");
-            chapterId = getInt("chapterId");
             name = getString("name");
             content = getString("content");
             nodeType = (EStoryNodeType)getEnum("nodeType", typeof(EStoryNodeType));
@@ -34,6 +32,5 @@ namespace GameCore.RefData
         }
 
         public static string assetPath => "RefData/ExportTxt";
-        public static string sheetName => "story_node";
     }
 }

@@ -2,6 +2,7 @@ using GameCore.RefData;
 using GameCore;
 using System.Collections.Generic;
 using System.Linq;
+using SCFrame;
 
 namespace GameCore.Story
 {
@@ -23,16 +24,19 @@ namespace GameCore.Story
                 .ToList();
         }
 
-        public static StoryNodeRefObj GetNode(long _nodeId)
+        /// <summary>在指定章节表内查找节点（节点 id 仅在章内唯一即可）。</summary>
+        public static StoryNodeRefObj GetNode(int _chapterId, long _nodeId)
         {
-            return SCRefDataMgr.instance.storyNodeRefList.refDataList.Find(x => x.id == _nodeId);
+            SCRefDataList<StoryNodeRefObj> list = SCRefDataMgr.instance.GetStoryNodeList(_chapterId);
+            if (list == null)
+                return null;
+            return list.refDataList.Find(x => x.id == _nodeId);
         }
 
         public static List<StoryNodeRefObj> GetNodesByChapter(int _chapterId)
         {
-            return SCRefDataMgr.instance.storyNodeRefList.refDataList
-                .Where(x => x.chapterId == _chapterId)
-                .ToList();
+            SCRefDataList<StoryNodeRefObj> list = SCRefDataMgr.instance.GetStoryNodeList(_chapterId);
+            return list?.refDataList ?? new List<StoryNodeRefObj>();
         }
 
         public static StoryNodeRefObj GetChapterStartNode(int _chapterId)
@@ -40,7 +44,7 @@ namespace GameCore.Story
             ChapterRefObj chapter = GetChapter(_chapterId);
             if (chapter == null)
                 return null;
-            return GetNode(chapter.startNodeId);
+            return GetNode(_chapterId, chapter.startNodeId);
         }
 
         public static CharacterRefObj GetCharacterByName(string _name)

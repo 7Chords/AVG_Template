@@ -16,7 +16,12 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: e2505c9efcc779848bbc4255cebf6a3e
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: eb7b1f0db4e16f941a475aab0fd2ebd0
+    m_Address: panel_dialogue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 58383bddb2b454d4e83c64f5c9a33e8d, type: 2}
   m_SchemaSet:

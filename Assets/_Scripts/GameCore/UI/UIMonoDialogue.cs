@@ -1,6 +1,4 @@
 using SCFrame.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +10,12 @@ namespace GameCore.UI
         public Text txtName;
         [Header("内容文本")]
         public Text txtContent;
+        [Header("点击继续区域")]
+        public Image imgClickArea;
+        [Header("选项按钮挂载点")]
+        public Transform choiceRoot;
+        [Header("对话打字机间隔（秒）")]
+        public float dialogueTypewriterInterval = 0.04f;
         [Header("存档按钮")]
         public Button btnSave;
         [Header("读档按钮")]
@@ -26,6 +30,29 @@ namespace GameCore.UI
         public Button btnSkip;
         [Header("历史按钮")]
         public Button btnHistory;
-    }
 
+        public void TryResolveRefs()
+        {
+            if (txtName == null)
+            {
+                Transform nameTf = transform.Find("img_dialogue_bg/txt_name");
+                if (nameTf != null)
+                    txtName = nameTf.GetComponent<Text>();
+            }
+            if (txtContent == null)
+            {
+                Transform contentTf = transform.Find("img_dialogue_bg/txt_content");
+                if (contentTf != null)
+                    txtContent = contentTf.GetComponent<Text>();
+            }
+            if (imgClickArea == null)
+                imgClickArea = GetComponent<Image>();
+            if (choiceRoot == null)
+            {
+                Transform existing = transform.Find("choice_root");
+                if (existing != null)
+                    choiceRoot = existing;
+            }
+        }
+    }
 }

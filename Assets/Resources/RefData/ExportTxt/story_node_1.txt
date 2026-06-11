@@ -1,0 +1,5 @@
+id	name	content	nodeType	flagType	nextList	bgAsset	characterAsset
+1	旁白	那是一个普通的午后，你坐在窗边读着书。	STANDARD	BEGIN	2		
+2	???	打扰一下，请问这个位置有人吗？	STANDARD	NONE	3		
+3	旁白	你抬起头，映入眼帘的是一双明亮的眼睛。	STANDARD	NONE	4		
+4	艾莉	我叫艾莉，很高兴认识你。	STANDARD	END	0		
