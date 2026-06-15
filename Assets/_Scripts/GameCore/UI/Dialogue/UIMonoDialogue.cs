@@ -6,29 +6,33 @@ namespace GameCore.UI
 {
     public class UIMonoDialogue : _ASCUIMonoBase
     {
-        [Header("名字文本")]
+        [Header("???????")]
         public Text txtName;
-        [Header("内容文本")]
+        [Header("???????")]
         public Text txtContent;
-        [Header("选项容器")]
+        [Header("???????")]
         public UIMonoCommonContainer monoSelectContainer;
-        [Header("点击继续区域")]
+        [Header("???????????")]
         public Image imgClickArea;
-        [Header("对话打字机间隔（秒）")]
+        [Header("????")]
+        public Image imgPortrait;
+        [Header("????")]
+        public Image imgScene;
+        [Header("???????????????")]
         public float dialogueTypewriterInterval = 0.04f;
-        [Header("存档按钮")]
+        [Header("?浵???")]
         public Button btnSave;
-        [Header("读档按钮")]
+        [Header("???????")]
         public Button btnLoad;
-        [Header("设置按钮")]
+        [Header("??????")]
         public Button btnSetting;
-        [Header("自动播放按钮")]
+        [Header("?????????")]
         public Button btnAuto;
-        [Header("隐藏UI按钮")]
+        [Header("????UI???")]
         public Button btnHide;
-        [Header("跳过按钮")]
+        [Header("???????")]
         public Button btnSkip;
-        [Header("历史按钮")]
+        [Header("??????")]
         public Button btnHistory;
 
         public void TryResolveRefs()
@@ -47,6 +51,18 @@ namespace GameCore.UI
             }
             if (imgClickArea == null)
                 imgClickArea = GetComponent<Image>();
+            if (imgPortrait == null)
+            {
+                Transform portraitTf = transform.Find("img_portrait_center");
+                if (portraitTf != null)
+                    imgPortrait = portraitTf.GetComponent<Image>();
+            }
+            if (imgScene == null)
+            {
+                Transform sceneTf = transform.Find("img_scene");
+                if (sceneTf != null)
+                    imgScene = sceneTf.GetComponent<Image>();
+            }
         }
     }
 }

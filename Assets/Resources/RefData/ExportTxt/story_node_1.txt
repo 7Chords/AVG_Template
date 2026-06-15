@@ -1,6 +1,6 @@
 ﻿id	name	content	nodeType	flagType	nextList	nextChapterId	bgAsset	characterAsset
-1	旁白	那是一个普通的午后，你坐在窗边读着书。	STANDARD	BEGIN	2	0
-2	???	打扰一下，请问这个位置有人吗？	STANDARD	NONE	3	0
-3	艾莉	我叫艾莉，很高兴认识你。	STANDARD	NONE	4;5	0
-4	继续聊聊	好的，我们改天再约。	SELECT	NONE	1	2
-5	告别	今天就到这里吧。	SELECT	NONE	0	0
+1	旁白	那是一个普通的午后，你坐在窗边读着书。	STANDARD	BEGIN	2	0	*	spr_portrait_girl_1
+2	???	打扰一下，请问这个位置有人吗？	STANDARD	NONE	3	0	*	spr_portrait_girl_2
+3	艾莉	我叫艾莉，很高兴认识你。	STANDARD	NONE	4;5	0	*	spr_portrait_girl_1
+4	继续聊聊	好的，我们改天再约。	SELECT	NONE	1	2	*	spr_portrait_girl_2
+5	告别	今天就到这里吧。	SELECT	NONE	0	0	*	spr_portrait_girl_1

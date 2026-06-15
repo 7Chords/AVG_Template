@@ -653,9 +653,11 @@ MonoBehaviour:
   txtContent: {fileID: 8973260286278534122}
   monoSelectContainer: {fileID: 1316576883769343348}
   imgClickArea: {fileID: 3888066216659498705}
+  imgPortrait: {fileID: 1664966833369218856}
+  imgScene: {fileID: 2143226654489379768}
   dialogueTypewriterInterval: 0.04
   btnSave: {fileID: 1111666849369203741}
-  btnLoad: {fileID: 0}
+  btnLoad: {fileID: 5705459178418018188}
   btnSetting: {fileID: 0}
   btnAuto: {fileID: 0}
   btnHide: {fileID: 0}
@@ -1534,7 +1536,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.8126}
-  m_SizeDelta: {x: 863.1129, y: 1081.6}
+  m_SizeDelta: {x: 1919.3, y: 1079.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2655655438430341289
 CanvasRenderer:
@@ -1557,14 +1559,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.26640794, b: 0.26640794, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7a164a48576080b49930d8e8e0dd0178, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

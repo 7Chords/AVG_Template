@@ -7,6 +7,7 @@ using System.Collections;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace GameCore.UI
 {
@@ -114,6 +115,7 @@ namespace GameCore.UI
 
             StoryModel.instance.SetCurrentNode(_m_currentNode.id);
             stopDialogueTypewriter();
+            refreshVisualAssets(_m_currentNode);
 
             if (_m_currentNode.nodeType == EStoryNodeType.STANDARD)
             {
@@ -148,6 +150,41 @@ namespace GameCore.UI
                 mono.txtName.color = color;
             else
                 mono.txtName.color = Color.black;
+        }
+
+        private void refreshVisualAssets(StoryNodeRefObj _node)
+        {
+            if (_node == null)
+                return;
+            applySpriteAsset(mono.imgScene, _node.bgAsset);
+            applySpriteAsset(mono.imgPortrait, _node.characterAsset);
+        }
+
+        private static bool isValidAssetKey(string _assetKey)
+        {
+            if (string.IsNullOrWhiteSpace(_assetKey))
+                return false;
+            return _assetKey.Trim() != "*";
+        }
+
+        private void applySpriteAsset(Image _image, string _assetKey)
+        {
+            if (_image == null || !isValidAssetKey(_assetKey))
+                return;
+
+            string assetKey = _assetKey.Trim();
+            Sprite sprite = ResourcesHelper.LoadSprite(assetKey);
+            if (sprite == null)
+            {
+                Debug.LogError($"加载剧情图片失败，请检查 Addressables 地址是否已加入分组并 Build：{assetKey}");
+                return;
+            }
+
+            _image.sprite = sprite;
+            _image.enabled = true;
+            _image.color = Color.white;
+            _image.preserveAspect = true;
+            _image.gameObject.SetActive(true);
         }
 
         private void stopDialogueTypewriter()

@@ -32,6 +32,32 @@ namespace SCFrame
             }
         }
 
+        /// <summary>
+        /// 加载 Sprite；单 Sprite 地址失败时尝试按 Key 加载子资源列表。
+        /// </summary>
+        public static Sprite LoadSprite(string _assetName)
+        {
+            if (string.IsNullOrWhiteSpace(_assetName))
+                return null;
+
+            Sprite sprite = LoadAsset<Sprite>(_assetName);
+            if (sprite != null)
+                return sprite;
+
+            try
+            {
+                IList<Sprite> sprites = Addressables.LoadAssetsAsync<Sprite>(_assetName, null).WaitForCompletion();
+                if (sprites != null && sprites.Count > 0)
+                    return sprites[0];
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("ResourcesHelper 加载 Sprite 失败：" + ex);
+            }
+
+            return null;
+        }
+
 
 
         /// <summary>

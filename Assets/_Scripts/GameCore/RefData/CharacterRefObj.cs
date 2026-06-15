@@ -3,21 +3,19 @@ using SCFrame;
 namespace GameCore.RefData
 {
     /// <summary>
-    /// 角色配表：名称、颜色与立绘资源。
+    /// 角色配表：名称与名字颜色。立绘/背景由 story_node 的 characterAsset、bgAsset 配置。
     /// </summary>
     public class CharacterRefObj : SCRefDataCore
     {
         public int id;
         public string name;
         public string nameColor;
-        public string spriteAsset;
 
         protected override void _parseFromString()
         {
             id = getInt("id");
             name = getString("name");
             nameColor = getString("nameColor");
-            spriteAsset = getString("spriteAsset");
         }
 
         public static string assetPath => "RefData/ExportTxt";

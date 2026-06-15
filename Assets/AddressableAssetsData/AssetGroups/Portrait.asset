@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Portrait
+  m_EditorClassIdentifier: 
+  m_GroupName: Portrait
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c65d542e5287a7a43945620a60c4c424
+  m_SerializeEntries:
+  - m_GUID: ed4b7dbaab368864d93089bbaabe18a3
+    m_Address: spr_portrait_girl_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b1e1978623404bd4bafa89f5529aaa13
+    m_Address: spr_portrait_girl_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a164a48576080b49930d8e8e0dd0178
+    m_Address: spr_portrait_girl_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 58383bddb2b454d4e83c64f5c9a33e8d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 26ebf2147f0f8e340b3f9bee1cc11fe7, type: 2}
+    - {fileID: 11400000, guid: 7434b55795152684f8c888c72c8beab8, type: 2}
