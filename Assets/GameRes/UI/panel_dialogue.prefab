@@ -654,7 +654,7 @@ MonoBehaviour:
   monoSelectContainer: {fileID: 1316576883769343348}
   imgClickArea: {fileID: 3888066216659498705}
   dialogueTypewriterInterval: 0.04
-  btnSave: {fileID: 0}
+  btnSave: {fileID: 1111666849369203741}
   btnLoad: {fileID: 0}
   btnSetting: {fileID: 0}
   btnAuto: {fileID: 0}

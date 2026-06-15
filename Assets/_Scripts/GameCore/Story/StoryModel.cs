@@ -33,5 +33,20 @@ namespace GameCore.Story
         {
             clearedChapterIds.Add(_chapterId);
         }
+
+        public void SetCurrentChapterAndNode(int _chapterId, long _nodeId)
+        {
+            currentChapterId = _chapterId;
+            currentNodeId = _nodeId;
+        }
+
+        public void RestoreState(int _chapterId, long _nodeId, int[] _clearedChapterIds)
+        {
+            currentChapterId = _chapterId;
+            currentNodeId = _nodeId;
+            clearedChapterIds = _clearedChapterIds != null
+                ? new HashSet<int>(_clearedChapterIds)
+                : new HashSet<int>();
+        }
     }
 }

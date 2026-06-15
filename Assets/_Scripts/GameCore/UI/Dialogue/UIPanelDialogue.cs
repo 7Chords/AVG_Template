@@ -45,6 +45,11 @@ namespace GameCore.UI
         public override void OnHidePanel()
         {
             SCMsgCenter.UnregisterMsg(SCMsgConst.STORY_SELECT_CONFIRM, onStorySelectConfirm);
+            SCMsgCenter.UnregisterMsg(SCMsgConst.STORY_SAVE_LOADED, onStorySaveLoaded);
+            if (mono.btnSave != null)
+                mono.btnSave.onClick.RemoveListener(onBtnSaveClick);
+            if (mono.btnLoad != null)
+                mono.btnLoad.onClick.RemoveListener(onBtnLoadClick);
             if (mono.imgClickArea != null)
                 mono.imgClickArea.RemoveMouseLeftClickDown(onMouseClickDialogue);
             stopDialogueTypewriter();
@@ -54,13 +59,51 @@ namespace GameCore.UI
         public override void OnShowPanel()
         {
             SCMsgCenter.RegisterMsg(SCMsgConst.STORY_SELECT_CONFIRM, onStorySelectConfirm);
+            SCMsgCenter.RegisterMsg(SCMsgConst.STORY_SAVE_LOADED, onStorySaveLoaded);
             if (mono.imgClickArea != null)
                 mono.imgClickArea.AddMouseLeftClickDown(onMouseClickDialogue);
+            if (mono.btnSave != null)
+                mono.btnSave.onClick.AddListener(onBtnSaveClick);
+            if (mono.btnLoad != null)
+                mono.btnLoad.onClick.AddListener(onBtnLoadClick);
 
             _m_selectContainer?.ShowPanel();
             StoryModel.instance.StartChapter(_m_chapterId);
             _m_currentNode = StoryRefDataHelper.GetChapterStartNode(_m_chapterId);
             refreshShow();
+        }
+
+        public void RestoreFromSave(int _chapterId, long _nodeId)
+        {
+            endSelectIfNeeded();
+            _m_chapterId = _chapterId;
+            StoryModel.instance.SetCurrentChapterAndNode(_chapterId, _nodeId);
+            _m_currentNode = StoryRefDataHelper.GetNode(_chapterId, _nodeId);
+            if (_m_currentNode == null)
+            {
+                Debug.LogError($"读档恢复失败：chapter={_chapterId}, node={_nodeId}");
+                return;
+            }
+            refreshShow();
+        }
+
+        private void onBtnSaveClick()
+        {
+            UINodeMgr.instance.AddNode(new UINodeSave(SCUIShowType.ADDITION, ESavePanelMode.SAVE));
+        }
+
+        private void onBtnLoadClick()
+        {
+            UINodeMgr.instance.AddNode(new UINodeSave(SCUIShowType.ADDITION, ESavePanelMode.LOAD));
+        }
+
+        private void onStorySaveLoaded(object[] _objs)
+        {
+            if (_objs == null || _objs.Length < 2)
+                return;
+            int chapterId = (int)_objs[0];
+            long nodeId = (long)_objs[1];
+            RestoreFromSave(chapterId, nodeId);
         }
 
         private void refreshShow()
@@ -203,7 +246,7 @@ namespace GameCore.UI
                 StoryModel.instance.MarkChapterCleared(_m_chapterId);
 
             _m_chapterId = targetChapterId;
-            StoryModel.instance.StartChapter(_m_chapterId);
+            StoryModel.instance.SetCurrentChapterAndNode(_m_chapterId, targetNodeId);
             _m_currentNode = StoryRefDataHelper.GetNode(_m_chapterId, targetNodeId);
             if (_m_currentNode == null)
             {

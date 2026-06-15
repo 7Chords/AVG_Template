@@ -22,4 +22,11 @@ namespace GameCore
         /// <summary>章节/段落终点</summary>
         END,
     }
+
+    /// <summary>存档面板模式</summary>
+    public enum ESavePanelMode
+    {
+        SAVE,
+        LOAD,
+    }
 }

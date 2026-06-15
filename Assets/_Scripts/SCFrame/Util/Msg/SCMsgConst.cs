@@ -11,5 +11,6 @@ public class SCMsgConst
     public const int STORY_START_SELECT = 2001;
     public const int STORY_END_SELECT = 2002;
     public const int STORY_SELECT_CONFIRM = 2003;
+    public const int STORY_SAVE_LOADED = 2004;
     #endregion
 }
